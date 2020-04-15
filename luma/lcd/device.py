@@ -228,11 +228,19 @@ class st7789(backlit_device):
     Serial interface to a colour ST7789 128x128 pixel LCD display.
     """
     def __init__(self, serial_interface=None, rotate=0, **kwargs):
+        serial_interface._spi.mode = 3
         super(st7789, self).__init__(luma.lcd.const.st7789, serial_interface, **kwargs)
-        self.capabilities(240, 240, rotate)
+        self.capabilities(240, 240, rotate, mode="RGB")
 
         self.command(0x36)
-        self.data([0x70])
+        if rotate == 1:
+            self.data([0x70]) # 90 deg.
+        if rotate == 2:
+            self.data([0xc0]) # 180 deg.
+        if rotate == 3:
+            self.data([0xb0]) # 270 deg.
+        else:
+            self.data([0x00]) # 0 deg.
 
         self.command(0x3A) 
         self.data([0x05])
