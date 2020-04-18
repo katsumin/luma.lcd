@@ -234,13 +234,17 @@ class st7789(backlit_device):
 
         self.command(0x36)
         if rotate == 1:
-            self.data([0x70]) # 90 deg.
+            self.data([0x70]) # 90 deg. MY=0, MX=1, MV=1, ML=1
         if rotate == 2:
-            self.data([0xc0]) # 180 deg.
+            self.data([0xc0]) # 180 deg. MY=1, MX=1, MV=0, ML=0
+            self.command(0x37)
+            self.data([0x00, 0x50]) # offset 80line
         if rotate == 3:
-            self.data([0xb0]) # 270 deg.
+            self.data([0xb0]) # 270 deg. MY=1, MX=0, MV=1, ML=1
+            self.command(0x37)
+            self.data([0x00, 0xf0]) # offset 240line
         else:
-            self.data([0x00]) # 0 deg.
+            self.data([0x00]) # 0 deg. MY=0, MX=0, MV=0, ML=0
 
         self.command(0x3A) 
         self.data([0x05])
